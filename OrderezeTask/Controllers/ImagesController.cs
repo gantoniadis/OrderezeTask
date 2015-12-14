@@ -59,21 +59,9 @@ namespace OrderezeTask.Controllers
             return View(image);
         }
 
-        public ActionResult CreateEntry(Image image)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Images.Add(image);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(image);
-        }
-
-        //[HttpPost]
+        [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ImageUpload([Bind(Include = "Id,Name,Description,imagePath")] Image image,HttpPostedFileBase file)
+        public ActionResult ImageUpload([Bind(Include = "Id,Name,Description")] Image image,HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)
                 try
@@ -82,7 +70,16 @@ namespace OrderezeTask.Controllers
                     file.SaveAs(path);
                     ViewBag.Message = "File uploaded successfully";
                     image.ImagePath = path.Substring(1);
-                    CreateEntry(image);
+
+                //if (ModelState.IsValid)
+                    //{
+                        db.Images.Add(image);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    //}
+
+                    //return View(image);
+                    
                 }
                 catch (Exception ex)
                 {
